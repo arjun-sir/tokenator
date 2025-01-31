@@ -22,9 +22,20 @@ router.post("/login", async (req: Request, res: Response) => {
         token: randomUUID(),
       },
     });
+    res.json({ message: "Authenticated", user });
+  } else {
+    res.json({
+      message: "Already Authenticated, below are your details",
+      user,
+    });
   }
+});
 
-  res.json({ message: "Authenticated", user });
+router.get("/user", async (req: Request, res: Response) => {
+  // get user from email
+  const { email } = req.body;
+  const user = await prisma.user.findUnique({ where: { email } });
+  res.json({ message: "User details", user });
 });
 
 export default router;
